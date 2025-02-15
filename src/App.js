@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import Checkbox from "@mui/material/Checkbox";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
+import Lottie from "lottie-react";
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [completed, setCompleted] = useState([]);
   const [taskInput, setTaskInput] = useState("");
+  const lottieRef = useRef();
 
   const handleInputChange = (e) => {
     setTaskInput(e.target.value);
+  };
+
+  const completedTask = (index) => {
+    const newCompletedTask = tasks[index];
+    setCompleted([...completed, newCompletedTask]);
+    setTasks(tasks.filter((_, i) => i !== index));
+  };
+  const handleDelete = () => {
+    lottieRef.current.play();
+    setTimeout(() => {}, 700);
   };
 
   const addTask = () => {
@@ -102,6 +115,14 @@ function App() {
                       onChange={handleInputChange}
                       onKeyDown={handleKeyDown}
                     />
+                    {/*   <button onClick={handleDelete} className="w-10 h-10">
+                      <Lottie
+                        lottieRef={lottieRef}
+                        path="/delete.json"
+                        loop={false} // Döngü olmasın
+                        autoplay={false} // Başlangıçta çalışmasın
+                      />
+                    </button> */}
                   </div>
 
                   <div className="w-[500px] mt-4">
@@ -115,12 +136,35 @@ function App() {
                             icon={<StarBorderIcon />}
                             checkedIcon={<StarIcon />}
                             color="success"
+                            onClick={() => completedTask(index)}
                           />
                           <span className="text-black">{task}</span>
                         </div>
                       ))
                     ) : (
                       <span className="text-gray-500">No tasks added yet.</span>
+                    )}
+                  </div>
+                  <div className="flex justify-start flex-col items-start w-[500px]">
+                    <div className="flex justify-center w-full">
+                      <span className="text-lg font-semibold">Completed</span>
+                    </div>
+                    {completed.length > 0 ? (
+                      completed.map((task, index) => (
+                        <div className="flex items-center gap-3 bg-white bg-opacity-50 rounded-md p-2 my-1 w-full">
+                          <Checkbox
+                            icon={<StarBorderIcon />}
+                            checkedIcon={<StarIcon />}
+                            color="success"
+                            checked
+                          />
+                          <span className="text-black line-through">
+                            {task}
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-gray-500">No completed tasks.</span>
                     )}
                   </div>
                 </div>
