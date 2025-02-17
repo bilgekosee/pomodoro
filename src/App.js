@@ -20,9 +20,8 @@ function App() {
     setCompleted([...completed, newCompletedTask]);
     setTasks(tasks.filter((_, i) => i !== index));
   };
-  const handleDelete = () => {
-    lottieRef.current.play();
-    setTimeout(() => {}, 700);
+  const deleteTask = (index) => {
+    setTasks(tasks.filter((_, i) => i !== index));
   };
 
   const addTask = () => {
@@ -115,14 +114,6 @@ function App() {
                       onChange={handleInputChange}
                       onKeyDown={handleKeyDown}
                     />
-                    {/*   <button onClick={handleDelete} className="w-10 h-10">
-                      <Lottie
-                        lottieRef={lottieRef}
-                        path="/delete.json"
-                        loop={false} // Döngü olmasın
-                        autoplay={false} // Başlangıçta çalışmasın
-                      />
-                    </button> */}
                   </div>
 
                   <div className="w-[500px] mt-4">
@@ -130,15 +121,23 @@ function App() {
                       tasks.map((task, index) => (
                         <div
                           key={index}
-                          className="flex items-center gap-3 bg-white bg-opacity-50 rounded-md p-2 my-1"
+                          className="flex items-center justify-between gap-3 bg-white bg-opacity-50 rounded-md  my-1"
                         >
-                          <Checkbox
-                            icon={<StarBorderIcon />}
-                            checkedIcon={<StarIcon />}
-                            color="success"
-                            onClick={() => completedTask(index)}
+                          <div>
+                            <Checkbox
+                              icon={<StarBorderIcon />}
+                              checkedIcon={<StarIcon />}
+                              color="success"
+                              onClick={() => completedTask(index)}
+                            />
+                            <span className="text-black">{task}</span>
+                          </div>
+
+                          <TaskItem
+                            key={index}
+                            task={task}
+                            onDelete={() => deleteTask(index)}
                           />
-                          <span className="text-black">{task}</span>
                         </div>
                       ))
                     ) : (
@@ -174,6 +173,32 @@ function App() {
         </div>
       </div>
     </div>
+  );
+}
+
+function TaskItem({ task, onDelete }) {
+  const lottieRef = useRef();
+
+  const handleDeleteClick = () => {
+    lottieRef.current.play(); // ✅ Animasyonu başlat
+    setTimeout(() => {
+      onDelete(); // ✅ 0.7 saniye sonra görevi kaldır
+    }, 2000);
+  };
+
+  return (
+    <button
+      onClick={handleDeleteClick}
+      className="flex justify-center items-center mb-4"
+    >
+      <Lottie
+        lottieRef={lottieRef}
+        path="/delete.json"
+        loop={false}
+        autoplay={false}
+        className="w-16 h-16"
+      />
+    </button>
   );
 }
 
