@@ -81,9 +81,14 @@ function App() {
                 <div className="flex justify-center gap-12">
                   <div className="w-[200px] h-[150px] border border-black rounded-2xl mt-6 bg-customDarkGreen">
                     <div className="flex items-center justify-center gap-10 w-[180px] h-[80px] mt-2 m-auto bg-customGreen opacity-100">
-                      <FaPlus style={{ color: "white", fontSize: "20px" }} />
+                      <button className="text-white text-xl *:hover:text-black ">
+                        <FaPlus />
+                      </button>
+
                       <span className="text-3xl">5</span>
-                      <FaMinus style={{ color: "white", fontSize: "20px" }} />
+                      <button className="text-white text-xl *:hover:text-black ">
+                        <FaMinus />
+                      </button>
                     </div>
                     <span className="flex items-center justify-center text-2xl mt-4 text-white">
                       Break Length
@@ -91,9 +96,13 @@ function App() {
                   </div>
                   <div className="w-[200px] h-[150px] border border-black rounded-2xl mt-6 bg-customDarkGreen">
                     <div className="flex items-center justify-center gap-10 w-[180px] h-[80px] mt-2 m-auto bg-customGreen opacity-100">
-                      <FaPlus style={{ color: "white", fontSize: "20px" }} />
+                      <button className="text-white text-xl *:hover:text-black ">
+                        <FaPlus />
+                      </button>
                       <span className="text-3xl ">25</span>
-                      <FaMinus style={{ color: "white", fontSize: "20px" }} />
+                      <button className="text-white text-xl *:hover:text-black ">
+                        <FaMinus />
+                      </button>
                     </div>
                     <span className="flex items-center justify-center text-2xl mt-4 text-white">
                       Session Length
