@@ -9,7 +9,6 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [taskInput, setTaskInput] = useState("");
-  const lottieRef = useRef();
 
   const handleInputChange = (e) => {
     setTaskInput(e.target.value);
@@ -22,6 +21,14 @@ function App() {
   };
   const deleteTask = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
+  };
+  const deleteCompletedTask = (index) => {
+    setCompleted(completed.filter((_, i) => i !== index));
+  };
+  const editTask = (index, newTask) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[index] = newTask;
+    setTasks(updatedTasks);
   };
 
   const addTask = () => {
@@ -48,7 +55,7 @@ function App() {
         <div className="absolute inset-0 flex justify-center items-center">
           <div className="grid grid-cols-2 w-full h-full">
             <div className="flex justify-center items-center">
-              <div className="w-[560px] h-[560px] bg-customGreen rounded-3xl bg-opacity-90 m-auto border-black border-2">
+              <div className="w-[560px] h-[560px] bg-customGreen rounded-3xl bg-opacity-90 m-auto border-black border-2 ">
                 <div className="w-[453px] h-[261px] bg-white m-auto mt-10 rounded-3xl border-black border-2">
                   <span className="flex justify-center items-center font-mono text-2xl mt-4">
                     SESSION
@@ -57,10 +64,16 @@ function App() {
                     25:00
                   </div>
                   <div className="flex justify-center gap-6">
-                    <button className="w-[93px] h-[52px] border border-black rounded-xl mt-6">
+                    <button
+                      className="w-[93px] h-[52px] border border-black rounded-xl mt-6 
+  text-white font-semibold animate-gradient transition-all duration-500 hover:w-[95px] hover:h-[55px]"
+                    >
                       Start
                     </button>
-                    <button className="w-[93px] h-[52px] border border-black rounded-xl mt-6">
+                    <button
+                      className="w-[93px] h-[52px] border border-black rounded-xl mt-6 
+  text-white font-semibold animate-gradient transition-all duration-500 hover:w-[95px] hover:h-[55px]"
+                    >
                       Reset
                     </button>
                   </div>
@@ -79,7 +92,7 @@ function App() {
                   <div className="w-[200px] h-[150px] border border-black rounded-2xl mt-6 bg-customDarkGreen">
                     <div className="flex items-center justify-center gap-10 w-[180px] h-[80px] mt-2 m-auto bg-customGreen opacity-100">
                       <FaPlus style={{ color: "white", fontSize: "20px" }} />
-                      <span className="text-3xl">25</span>
+                      <span className="text-3xl ">25</span>
                       <FaMinus style={{ color: "white", fontSize: "20px" }} />
                     </div>
                     <span className="flex items-center justify-center text-2xl mt-4 text-white">
@@ -121,17 +134,20 @@ function App() {
                       tasks.map((task, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between gap-3 bg-white bg-opacity-50 rounded-md  my-1"
+                          className="flex items-center justify-between  bg-white bg-opacity-50 rounded-md h-auto min-h-[60px] my-1 px-3"
                         >
-                          <div>
-                            <Checkbox
-                              icon={<StarBorderIcon />}
-                              checkedIcon={<StarIcon />}
-                              color="success"
-                              onClick={() => completedTask(index)}
-                            />
-                            <span className="text-black">{task}</span>
-                          </div>
+                          <Checkbox
+                            icon={<StarBorderIcon />}
+                            checkedIcon={<StarIcon />}
+                            color="success"
+                            onClick={() => completedTask(index)}
+                          />
+
+                          <EditTask
+                            task={task}
+                            index={index}
+                            onSave={editTask}
+                          />
 
                           <TaskItem
                             key={index}
@@ -144,22 +160,35 @@ function App() {
                       <span className="text-gray-500">No tasks added yet.</span>
                     )}
                   </div>
+
                   <div className="flex justify-start flex-col items-start w-[500px]">
                     <div className="flex justify-center w-full">
                       <span className="text-lg font-semibold">Completed</span>
                     </div>
                     {completed.length > 0 ? (
                       completed.map((task, index) => (
-                        <div className="flex items-center gap-3 bg-white bg-opacity-50 rounded-md p-2 my-1 w-full">
-                          <Checkbox
-                            icon={<StarBorderIcon />}
-                            checkedIcon={<StarIcon />}
-                            color="success"
-                            checked
+                        <div
+                          key={index}
+                          className="flex items-center justify-between gap-3 bg-gray-600 bg-opacity-50 rounded-md h-auto min-h-[60px] my-1 w-full px-3"
+                        >
+                          <div>
+                            <Checkbox
+                              icon={<StarBorderIcon />}
+                              checkedIcon={<StarIcon />}
+                              color="success"
+                              checked
+                            />
+
+                            <span className="text-black line-through">
+                              {task}
+                            </span>
+                          </div>
+
+                          <TaskItem
+                            key={index}
+                            task={task}
+                            onDelete={() => deleteCompletedTask(index)}
                           />
-                          <span className="text-black line-through">
-                            {task}
-                          </span>
                         </div>
                       ))
                     ) : (
@@ -180,9 +209,9 @@ function TaskItem({ task, onDelete }) {
   const lottieRef = useRef();
 
   const handleDeleteClick = () => {
-    lottieRef.current.play(); // ✅ Animasyonu başlat
+    lottieRef.current.play();
     setTimeout(() => {
-      onDelete(); // ✅ 0.7 saniye sonra görevi kaldır
+      onDelete();
     }, 2000);
   };
 
@@ -199,6 +228,68 @@ function TaskItem({ task, onDelete }) {
         className="w-16 h-16"
       />
     </button>
+  );
+}
+
+function EditTask({ task, index, onSave }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTask, setNewTask] = useState(task);
+  const inputRef = useRef(null);
+  const lottieRef = useRef(null);
+
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    if (lottieRef.current) {
+      lottieRef.current.play();
+    }
+    setIsEditing(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const handleChange = (e) => {
+    setNewTask(e.target.value);
+  };
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    onSave(index, newTask.trim() !== "" ? newTask : task);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setIsEditing(false);
+      onSave(index, newTask.trim() !== "" ? newTask : task);
+    }
+  };
+
+  return (
+    <div className="flex items-center w-full">
+      {isEditing ? (
+        <input
+          ref={inputRef}
+          type="text"
+          value={newTask}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          autoFocus
+          className="w-full border-none bg-transparent focus:ring-0 outline-none text-black"
+        />
+      ) : (
+        <span className="w-full cursor-pointer bg-transparent focus:ring-0 outline-none">
+          {task}
+        </span>
+      )}
+
+      <button onClick={handleEditClick} className="ml-2 flex items-center">
+        <Lottie
+          lottieRef={lottieRef}
+          path="/edit.json"
+          className="w-8 h-8"
+          loop={false}
+        />
+      </button>
+    </div>
   );
 }
 
