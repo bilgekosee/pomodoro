@@ -13,30 +13,32 @@ function App() {
   const [isRunning, setIsRunning] = useState(false);
   const [sessionLength, setSessionLength] = useState(25);
   const [breakLength, setBreakLength] = useState(5);
+  const [isBreak, setIsBreak] = useState(false);
 
   useEffect(() => {
-    let timer;
-    if (isRunning && time > 0) {
-      timer = setInterval(() => {
-        setTime((prevTime) => prevTime - 1);
-      }, 1000);
-    } else if (time === 0) {
-      clearInterval(timer);
-      setIsRunning(false);
-      setTime(breakLength * 60);
-    }
+    if (!isRunning) return;
+
+    const timer = setInterval(() => {
+      setTime((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setIsRunning(false);
+          if (isBreak) {
+            setIsBreak(false);
+            setTime(sessionLength * 60);
+          } else {
+            setIsBreak(true);
+            setTime(breakLength * 60);
+          }
+          return 0;
+        }
+
+        return prevTime - 1;
+      });
+    }, 1000);
 
     return () => clearInterval(timer);
-  }, [isRunning, time, breakLength]);
-
-  const startTimer = () => {
-    setIsRunning(true);
-  };
-
-  const resetTimer = () => {
-    setIsRunning(false);
-    setTime(25 * 60);
-  };
+  }, [isRunning, isBreak, sessionLength, breakLength]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -120,26 +122,49 @@ function App() {
               <div className="w-[560px] h-[560px] bg-customGreen rounded-3xl bg-opacity-90 m-auto border-black border-2 ">
                 <div className="w-[453px] h-[261px] bg-white m-auto mt-10 rounded-3xl border-black border-2">
                   <span className="flex justify-center items-center font-mono text-2xl mt-4">
-                    SESSION
+                    {isBreak ? "BREAK TIME" : "SESSION"}
                   </span>
                   <div className="flex justify-center items-center font-mono text-7xl font-bold mt-4">
                     {formatTime(time)}
                   </div>
                   <div className="flex justify-center gap-6">
                     <button
-                      onClick={startTimer}
+                      onClick={() => setIsRunning(true)}
+                      disabled={isRunning}
                       className="w-[93px] h-[52px] border border-black rounded-xl mt-6 
-  text-white font-semibold animate-gradient transition-all duration-500 hover:w-[95px] hover:h-[55px]"
+  text-black font-semibold hover:bg-customGreen hover:border-green-700"
                     >
                       Start
                     </button>
                     <button
-                      onClick={resetTimer}
+                      onClick={() => {
+                        setIsRunning(false);
+                        setIsBreak(false);
+                        setTime(sessionLength * 60);
+                      }}
                       className="w-[93px] h-[52px] border border-black rounded-xl mt-6 
-  text-white font-semibold animate-gradient transition-all duration-500 hover:w-[95px] hover:h-[55px]"
+  text-black font-semibold hover:bg-customGreen hover:border-green-700 "
                     >
                       Reset
                     </button>
+                  </div>
+                  <div className=" flex justify-center items-center w-[400px] h-8  overflow-hidden mt-2 m-auto">
+                    <div
+                      className={`h-full transition-all duration-1000 ${
+                        isBreak
+                          ? "animate-gradient transition-all duration-500"
+                          : "animate-gradient transition-all duration-500"
+                      }`}
+                      style={{
+                        width: isRunning
+                          ? `${
+                              isBreak
+                                ? (time / (breakLength * 60)) * 100
+                                : (time / (sessionLength * 60)) * 100
+                            }%`
+                          : "100%",
+                      }}
+                    ></div>
                   </div>
                 </div>
                 <div className="flex justify-center gap-12">

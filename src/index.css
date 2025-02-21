@@ -15,7 +15,7 @@
 }
 
 .animate-gradient {
-  background: linear-gradient(90deg, #495154, #b0ada2, #316b54, #065d2b);
+  background: linear-gradient(90deg, #282a2b, #71706d, #316b54, #065d2b);
   background-size: 300% 300%;
   animation: slidebg 5s linear infinite;
 }
