@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import Checkbox from "@mui/material/Checkbox";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -9,6 +9,68 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [taskInput, setTaskInput] = useState("");
+  const [time, setTime] = useState(25 * 60);
+  const [isRunning, setIsRunning] = useState(false);
+  const [sessionLength, setSessionLength] = useState(25);
+  const [breakLength, setBreakLength] = useState(5);
+
+  useEffect(() => {
+    let timer;
+    if (isRunning && time > 0) {
+      timer = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (time === 0) {
+      clearInterval(timer);
+      setIsRunning(false);
+      setTime(breakLength * 60);
+    }
+
+    return () => clearInterval(timer);
+  }, [isRunning, time, breakLength]);
+
+  const startTimer = () => {
+    setIsRunning(true);
+  };
+
+  const resetTimer = () => {
+    setIsRunning(false);
+    setTime(25 * 60);
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const increaseSession = () => {
+    if (sessionLength < 60) {
+      setSessionLength(sessionLength + 1);
+      setTime((sessionLength + 1) * 60);
+    }
+  };
+
+  const decreaseSession = () => {
+    if (sessionLength > 1) {
+      setSessionLength(sessionLength - 1);
+      setTime((sessionLength - 1) * 60);
+    }
+  };
+
+  const increaseBreak = () => {
+    if (breakLength < 15) {
+      setBreakLength(breakLength + 1);
+    }
+  };
+
+  const decreaseBreak = () => {
+    if (breakLength > 1) {
+      setBreakLength(breakLength - 1);
+    }
+  };
 
   const handleInputChange = (e) => {
     setTaskInput(e.target.value);
@@ -61,16 +123,18 @@ function App() {
                     SESSION
                   </span>
                   <div className="flex justify-center items-center font-mono text-7xl font-bold mt-4">
-                    25:00
+                    {formatTime(time)}
                   </div>
                   <div className="flex justify-center gap-6">
                     <button
+                      onClick={startTimer}
                       className="w-[93px] h-[52px] border border-black rounded-xl mt-6 
   text-white font-semibold animate-gradient transition-all duration-500 hover:w-[95px] hover:h-[55px]"
                     >
                       Start
                     </button>
                     <button
+                      onClick={resetTimer}
                       className="w-[93px] h-[52px] border border-black rounded-xl mt-6 
   text-white font-semibold animate-gradient transition-all duration-500 hover:w-[95px] hover:h-[55px]"
                     >
@@ -81,12 +145,18 @@ function App() {
                 <div className="flex justify-center gap-12">
                   <div className="w-[200px] h-[150px] border border-black rounded-2xl mt-6 bg-customDarkGreen">
                     <div className="flex items-center justify-center gap-10 w-[180px] h-[80px] mt-2 m-auto bg-customGreen opacity-100">
-                      <button className="text-white text-xl *:hover:text-black ">
+                      <button
+                        onClick={increaseBreak}
+                        className="text-white text-xl *:hover:text-black "
+                      >
                         <FaPlus />
                       </button>
 
-                      <span className="text-3xl">5</span>
-                      <button className="text-white text-xl *:hover:text-black ">
+                      <span className="text-3xl">{breakLength}</span>
+                      <button
+                        onClick={decreaseBreak}
+                        className="text-white text-xl *:hover:text-black "
+                      >
                         <FaMinus />
                       </button>
                     </div>
@@ -96,11 +166,17 @@ function App() {
                   </div>
                   <div className="w-[200px] h-[150px] border border-black rounded-2xl mt-6 bg-customDarkGreen">
                     <div className="flex items-center justify-center gap-10 w-[180px] h-[80px] mt-2 m-auto bg-customGreen opacity-100">
-                      <button className="text-white text-xl *:hover:text-black ">
+                      <button
+                        onClick={increaseSession}
+                        className="text-white text-xl *:hover:text-black "
+                      >
                         <FaPlus />
                       </button>
-                      <span className="text-3xl ">25</span>
-                      <button className="text-white text-xl *:hover:text-black ">
+                      <span className="text-3xl ">{sessionLength}</span>
+                      <button
+                        onClick={decreaseSession}
+                        className="text-white text-xl *:hover:text-black "
+                      >
                         <FaMinus />
                       </button>
                     </div>
