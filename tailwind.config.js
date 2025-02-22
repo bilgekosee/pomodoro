@@ -10,6 +10,12 @@ module.exports = {
       fontFamily: {
         mono: ['"Roboto Mono"', "monospace"],
       },
+      screens: {
+        xs: "300px",
+        sm: "750px",
+        md: "1020px",
+        lg: "1100px",
+      },
     },
   },
   plugins: [],

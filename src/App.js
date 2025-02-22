@@ -110,28 +110,28 @@ function App() {
 
   return (
     <div className="App">
-      <div className="flex justify-center items-center w-screen h-screen mt-auto">
+      <div className="flex justify-center items-center w-screen h-screen mt-auto overflow-x-hidden">
         <img
           src="./lofi.png"
           className="w-full h-full object-cover opacity-80"
           alt="Lofi"
         />
-        <div className="absolute inset-0 flex justify-center items-center">
-          <div className="grid grid-cols-2 w-full h-full">
+        <div className="absolute inset-0 flex justify-center items-center overflow-x-hidden">
+          <div className="lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 sm:grid sm:grid-cols-2 w-full h-full xs:flex xs:flex-col xs:gap-10 xs:mt-10  ">
             <div className="flex justify-center items-center">
-              <div className="w-[560px] h-[560px] bg-customGreen rounded-3xl bg-opacity-90 m-auto border-black border-2 ">
-                <div className="w-[453px] h-[261px] bg-white m-auto mt-10 rounded-3xl border-black border-2">
-                  <span className="flex justify-center items-center font-mono text-2xl mt-4">
+              <div className="lg:w-[560px] lg:h-[560px] md:h-[560px]  sm:h-[450px] bg-customGreen rounded-3xl bg-opacity-90 m-auto border-black border-2 md:w-[500px] sm:w-[350px] xs:w-[300px] ">
+                <div className="lg:w-[453px] lg:h-[261px] xs:w-[250px] md:w-[453px] md:h-[261px] bg-white m-auto mt-10 rounded-3xl border-black border-2 sm:w-[300px] ">
+                  <span className="flex justify-center items-center font-mono lg:text-2xl md:text-2xl sm:text-2xl xs:text-xl mt-4">
                     {isBreak ? "BREAK TIME" : "SESSION"}
                   </span>
-                  <div className="flex justify-center items-center font-mono text-7xl font-bold mt-4">
+                  <div className="flex justify-center items-center font-mono lg:text-7xl md:text-7xl sm:text-7xl xs:text-4xl font-bold mt-4">
                     {formatTime(time)}
                   </div>
                   <div className="flex justify-center gap-6">
                     <button
                       onClick={() => setIsRunning(true)}
                       disabled={isRunning}
-                      className="w-[93px] h-[52px] border border-black rounded-xl mt-6 
+                      className="lg:w-[93px] lg:h-[52px] md:w-[93px] md:h-[52px] sm:w-[93px] sm:h-[52px] xs:w-[70px] xs:h-[40px] border border-black rounded-xl mt-6 
   text-black font-semibold hover:bg-customGreen hover:border-green-700"
                     >
                       Start
@@ -142,13 +142,13 @@ function App() {
                         setIsBreak(false);
                         setTime(sessionLength * 60);
                       }}
-                      className="w-[93px] h-[52px] border border-black rounded-xl mt-6 
+                      className="lg:w-[93px] lg:h-[52px] md:w-[93px] md:h-[52px] sm:w-[93px] sm:h-[52px] xs:w-[70px] xs:h-[40px]  border border-black rounded-xl mt-6 
   text-black font-semibold hover:bg-customGreen hover:border-green-700 "
                     >
                       Reset
                     </button>
                   </div>
-                  <div className=" flex justify-center items-center w-[400px] h-8  overflow-hidden mt-2 m-auto">
+                  <div className=" flex justify-center items-center lg:w-[400px] md:w-[400px] sm:w-[300px] lg:h-8 md:h-8  sm:h-8 xs:h-6 xs:mb-2  sm:mb-2 overflow-hidden mt-2 m-auto">
                     <div
                       className={`h-full transition-all duration-1000 ${
                         isBreak
@@ -162,50 +162,54 @@ function App() {
                                 ? (time / (breakLength * 60)) * 100
                                 : (time / (sessionLength * 60)) * 100
                             }%`
-                          : "100%",
+                          : "80% ",
                       }}
                     ></div>
                   </div>
                 </div>
                 <div className="flex justify-center gap-12">
-                  <div className="w-[200px] h-[150px] border border-black rounded-2xl mt-6 bg-customDarkGreen">
-                    <div className="flex items-center justify-center gap-10 w-[180px] h-[80px] mt-2 m-auto bg-customGreen opacity-100">
+                  <div className="lg:w-[200px] lg:h-[150px] md:w-[200px] md:h-[150px] sm:w-[120px] sm:h-[90px] xs:w-[100px] xs:h-[80px] border border-black rounded-2xl mt-6 bg-customDarkGreen">
+                    <div className="flex items-center justify-center lg:gap-10 md:gap-10 sm:gap-6 xs:gap-4 lg:w-[180px] lg:h-[80px] md:w-[180px] md:h-[80px] sm:w-[105px] sm:h-[40px] xs:w-[85px] xs:h-[30px] mt-2 m-auto  bg-customGreen opacity-100">
                       <button
                         onClick={increaseBreak}
-                        className="text-white text-xl *:hover:text-black "
+                        className="text-white lg:text-xl md:text-xl *:hover:text-black sm:text-xs"
                       >
                         <FaPlus />
                       </button>
 
-                      <span className="text-3xl">{breakLength}</span>
+                      <span className="lg:text-3xl md:text-3xl sm:text-xl">
+                        {breakLength}
+                      </span>
                       <button
                         onClick={decreaseBreak}
-                        className="text-white text-xl *:hover:text-black "
+                        className="text-white lg:text-xl md:text-xl  *:hover:text-black sm:text-xs"
                       >
                         <FaMinus />
                       </button>
                     </div>
-                    <span className="flex items-center justify-center text-2xl mt-4 text-white">
+                    <span className="flex items-center justify-center lg:text-2xl  md:text-2xl  sm:text-xs xs:text-xs mt-4 text-white">
                       Break Length
                     </span>
                   </div>
-                  <div className="w-[200px] h-[150px] border border-black rounded-2xl mt-6 bg-customDarkGreen">
-                    <div className="flex items-center justify-center gap-10 w-[180px] h-[80px] mt-2 m-auto bg-customGreen opacity-100">
+                  <div className="lg:w-[200px] lg:h-[150px] md:w-[200px] md:h-[150px] sm:w-[120px] sm:h-[90px] xs:w-[100px] xs:h-[80px] border border-black rounded-2xl mt-6 bg-customDarkGreen xs:mb-4">
+                    <div className="flex items-center justify-center lg:gap-10 md:gap-10 sm:gap-6 xs:gap-4 lg:w-[180px] lg:h-[80px] md:w-[180px] md:h-[80px] sm:w-[105px] sm:h-[40px] xs:w-[85px] xs:h-[30px] mt-2 m-auto  bg-customGreen opacity-100">
                       <button
                         onClick={increaseSession}
-                        className="text-white text-xl *:hover:text-black "
+                        className="text-white lg:text-xl md:text-xl *:hover:text-black sm:text-xs"
                       >
                         <FaPlus />
                       </button>
-                      <span className="text-3xl ">{sessionLength}</span>
+                      <span className="lg:text-3xl md:text-3xl sm:text-xl">
+                        {sessionLength}
+                      </span>
                       <button
                         onClick={decreaseSession}
-                        className="text-white text-xl *:hover:text-black "
+                        className="text-white lg:text-xl md:text-xl  *:hover:text-black sm:text-xs "
                       >
                         <FaMinus />
                       </button>
                     </div>
-                    <span className="flex items-center justify-center text-2xl mt-4 text-white">
+                    <span className="flex items-center justify-center lg:text-2xl  md:text-2xl sm:text-xs xs:text-xs  mt-4 text-white">
                       Session Length
                     </span>
                   </div>
@@ -213,7 +217,7 @@ function App() {
               </div>
             </div>
             <div className="flex items-center">
-              <div className="w-[560px] h-[560px] bg-customGreen rounded-3xl bg-opacity-90 m-auto border-black border-2">
+              <div className="lg:w-[560px] lg:h-[560px] md:h-[560px] sm:h-[450px] bg-customGreen rounded-3xl bg-opacity-90 m-auto border-black border-2 md:w-[500px] sm:w-[350px] xs:w-[300px] xs:h-[500px] ">
                 <div className="flex justify-center items-center mt-4">
                   <span className="text-xl text-black font-bold">
                     Your Tasks
@@ -224,13 +228,13 @@ function App() {
                   <div className="relative w-[500px] mt-6">
                     <button
                       onClick={addTask}
-                      className="absolute flex items-center justify-center rounded-full w-[24px] h-[24px] bg-customGreen left-3 top-1/2 transform -translate-y-1/2"
+                      className="absolute flex items-center justify-center rounded-full w-[24px] h-[24px] bg-customGreen lg:left-3 md:left-9 sm:left-28 xs:left-32 top-1/2 transform -translate-y-1/2"
                     >
                       <span className="text-gray-700 text-sm font-bold">+</span>
                     </button>
 
                     <input
-                      className="w-full h-[40px] bg-white bg-opacity-50 rounded pl-10 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-green-900"
+                      className="lg:w-full h-[40px] md:w-[450px] sm:w-[300px] xs:w-[250px] xs:flex xs:m-auto sm:m-auto sm:flex md:m-auto md:flex md:justify-center bg-white bg-opacity-50 rounded pl-10 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-green-900"
                       type="text"
                       placeholder="Add a task..."
                       value={taskInput}
@@ -239,12 +243,12 @@ function App() {
                     />
                   </div>
 
-                  <div className="w-[500px] mt-4">
+                  <div className="lg:w-[500px] md:w-[450px] sm:w-[320px] xs:w-[250px] mt-4 lg:max-h-[200px] md:max-h-[190px] sm:max-h-[140px] xs:max-h-[150px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
                     {tasks.length > 0 ? (
                       tasks.map((task, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between  bg-white bg-opacity-50 rounded-md h-auto min-h-[60px] my-1 px-3"
+                          className="flex items-center justify-between  bg-white bg-opacity-50 rounded-md h-auto  min-h-[50px] xs:h-[40px]  my-1 px-3"
                         >
                           <Checkbox
                             icon={<StarBorderIcon />}
@@ -267,19 +271,20 @@ function App() {
                         </div>
                       ))
                     ) : (
-                      <span className="text-gray-500">No tasks added yet.</span>
+                      <span className="text-gray-500 md:relative md:left-3 sm:relative  xs:relative ">
+                        No tasks added yet.
+                      </span>
                     )}
                   </div>
-
-                  <div className="flex justify-start flex-col items-start w-[500px]">
-                    <div className="flex justify-center w-full">
-                      <span className="text-lg font-semibold">Completed</span>
-                    </div>
+                  <div className="flex justify-center w-full">
+                    <span className="text-lg font-semibold">Completed</span>
+                  </div>
+                  <div className="flex flex-col items-start lg:w-[500px] md:w-[450px] sm:w-[320px] xs:w-[250px] lg:max-h-[200px] md:max-h-[190px] sm:max-h-[140px]  xs:max-h-[170px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
                     {completed.length > 0 ? (
                       completed.map((task, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between gap-3 bg-gray-600 bg-opacity-50 rounded-md h-auto min-h-[60px] my-1 w-full px-3"
+                          className="flex items-center justify-between gap-3 bg-gray-600 bg-opacity-50 rounded-md h-auto min-h-[50px] xs:h-[40px] my-1 w-full px-3 "
                         >
                           <div>
                             <Checkbox
@@ -289,7 +294,7 @@ function App() {
                               checked
                             />
 
-                            <span className="text-black line-through">
+                            <span className="text-black line-through break-words whitespace-normal overflow-hidden text-ellipsis">
                               {task}
                             </span>
                           </div>
@@ -302,7 +307,9 @@ function App() {
                         </div>
                       ))
                     ) : (
-                      <span className="text-gray-500">No completed tasks.</span>
+                      <span className="text-gray-500 md:relative md:left-3 sm:relative  xs:relative ">
+                        No completed tasks.
+                      </span>
                     )}
                   </div>
                 </div>
@@ -328,7 +335,7 @@ function TaskItem({ task, onDelete }) {
   return (
     <button
       onClick={handleDeleteClick}
-      className="flex justify-center items-center mb-4"
+      className="flex justify-center items-center flex-shrink-0 mb-4"
     >
       <Lottie
         lottieRef={lottieRef}
@@ -386,12 +393,15 @@ function EditTask({ task, index, onSave }) {
           className="w-full border-none bg-transparent focus:ring-0 outline-none text-black"
         />
       ) : (
-        <span className="w-full cursor-pointer bg-transparent focus:ring-0 outline-none">
+        <span className="w-full break-words whitespace-normal overflow-hidden text-ellipsis">
           {task}
         </span>
       )}
 
-      <button onClick={handleEditClick} className="ml-2 flex items-center">
+      <button
+        onClick={handleEditClick}
+        className="ml-2 flex items-center flex-shrink-0"
+      >
         <Lottie
           lottieRef={lottieRef}
           path="/edit.json"
