@@ -19,3 +19,18 @@
   background-size: 300% 300%;
   animation: slidebg 5s linear infinite;
 }
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.7);
+    border-radius: 10px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: rgba(229, 231, 235, 0.5);
+  }
+}

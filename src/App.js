@@ -23,6 +23,7 @@ function App() {
         if (prevTime <= 1) {
           clearInterval(timer);
           setIsRunning(false);
+
           if (isBreak) {
             setIsBreak(false);
             setTime(sessionLength * 60);
@@ -79,10 +80,20 @@ function App() {
   };
 
   const completedTask = (index) => {
-    const newCompletedTask = tasks[index];
-    setCompleted([...completed, newCompletedTask]);
-    setTasks(tasks.filter((_, i) => i !== index));
+    setTasks((prevTasks) => {
+      const newCompletedTask = prevTasks[index];
+
+      setCompleted((prevCompleted) => {
+        if (!prevCompleted.includes(newCompletedTask)) {
+          return [...prevCompleted, newCompletedTask];
+        }
+        return prevCompleted;
+      });
+
+      return prevTasks.filter((_, i) => i !== index);
+    });
   };
+
   const deleteTask = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
@@ -162,7 +173,9 @@ function App() {
                                 ? (time / (breakLength * 60)) * 100
                                 : (time / (sessionLength * 60)) * 100
                             }%`
-                          : "80% ",
+                          : "0% ",
+                        borderRadius: "10px",
+                        margin: "0 5px",
                       }}
                     ></div>
                   </div>
@@ -248,12 +261,13 @@ function App() {
                       tasks.map((task, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between  bg-white bg-opacity-50 rounded-md h-auto  min-h-[50px] xs:h-[40px]  my-1 px-3"
+                          className="flex items-center justify-between max-h-[250px] overflow-y bg-white bg-opacity-50 rounded-md h-auto  min-h-[50px]   my-1 px-3"
                         >
                           <Checkbox
                             icon={<StarBorderIcon />}
                             checkedIcon={<StarIcon />}
                             color="success"
+                            checked={completed.includes(tasks[index])} // ✅ Checked durumunu belirliyoruz
                             onClick={() => completedTask(index)}
                           />
 
@@ -284,7 +298,7 @@ function App() {
                       completed.map((task, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between gap-3 bg-gray-600 bg-opacity-50 rounded-md h-auto min-h-[50px] xs:h-[40px] my-1 w-full px-3 "
+                          className="flex items-center w-full  justify-between gap-3 bg-gray-600 bg-opacity-50 rounded-md h-auto min-h-[50px] max-h-[300px]  overflow-y my-1  px-3 "
                         >
                           <div>
                             <Checkbox
@@ -293,12 +307,10 @@ function App() {
                               color="success"
                               checked
                             />
-
-                            <span className="text-black line-through break-words whitespace-normal overflow-hidden text-ellipsis">
-                              {task}
-                            </span>
                           </div>
-
+                          <span className="w-full line-through lg:max-w-[316px] md:max-w-[270px] sm:max-w-[140px] xs:max-w-[70px] overflow-y-hidden scrollbar-thin break-words whitespace-normal overflow-hidden text-ellipsis">
+                            {task}
+                          </span>
                           <TaskItem
                             key={index}
                             task={task}
@@ -393,7 +405,7 @@ function EditTask({ task, index, onSave }) {
           className="w-full border-none bg-transparent focus:ring-0 outline-none text-black"
         />
       ) : (
-        <span className="w-full break-words whitespace-normal overflow-hidden text-ellipsis">
+        <span className="w-full lg:max-w-[316px] md:max-w-[270px] sm:max-w-[140px] xs:max-w-[70px] overflow-y-hidden scrollbar-thin break-words whitespace-normal overflow-hidden text-ellipsis">
           {task}
         </span>
       )}
