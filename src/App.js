@@ -267,7 +267,7 @@ function App() {
                             icon={<StarBorderIcon />}
                             checkedIcon={<StarIcon />}
                             color="success"
-                            checked={completed.includes(tasks[index])} // ✅ Checked durumunu belirliyoruz
+                            checked={completed.includes(tasks[index])}
                             onClick={() => completedTask(index)}
                           />
 
